@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const fuelStationApi = require('./api/fuelStationApi');
 
 dotenv.config();
 const app = express();
@@ -25,6 +26,12 @@ mongoose.connect(MONGODB_URI, {
 mongoose.connection.once('open', () => {
     console.log('MongoDB connection established successfully');
 });
+
+app.route('/').get((req,res) => {
+    res.send('Test route');
+});
+
+app.use('/fuelStation', fuelStationApi());
 
 app.listen(PORT, (error) => {
     if (error) {
