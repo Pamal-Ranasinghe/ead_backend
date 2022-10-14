@@ -1,4 +1,5 @@
 const Vehicle = require('../models/vehicle');
+const FuelStation = require('../models/fuelStation');
 
 const addVehicle = async (req,res) => {
     try{
@@ -62,4 +63,33 @@ const deleteVehicle = async (req,res) => {
     }
 }
 
-module.exports = {addVehicle, getVehicles, updateVehicle, deleteVehicle};
+const addVehicleToQueue = async (req,res) => {
+    try{
+        if(req.params && req.body) {
+            const vehicle = await Vehicle.findById(req.params.id);
+            if(vehicle) {
+                if(vehicle.fuelType === 'Petrol') {
+                    await FuelStation.findOneAndUpdate({stationName: req.body.stationName}, {$push: {petrolQueue: vehicle._id}})
+                    .then(data => {
+                        res.status(200).json({message: 'Vehicle added to queue successfully', data: data});
+                    })
+                    .catch(error => {
+                        res.status(500).json({message: 'Error occured', error: error});
+                    });
+                } else if(vehicle.fuelType === 'Diesel') {
+                    await FuelStation.findOneAndUpdate({stationName: req.body.stationName}, {$push: {petrolQueue: vehicle._id}})
+                    .then(data => {
+                        res.status(200).json({message: 'Vehicle added to queue successfully', data: data});
+                    })
+                    .catch(error => {
+                        res.status(500).json({message: 'Error occured', error: error});
+                    });
+                }
+            }
+        }
+    } catch (error) {
+        res.status(500).json({message: 'Error occured', error: error});
+    }
+}
+
+module.exports = {addVehicle, getVehicles, updateVehicle, deleteVehicle, addVehicleToQueue};

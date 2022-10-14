@@ -6,6 +6,6 @@ module.exports = () => {
     router.post('/addVehicle', VehicleController.addVehicle);
     router.get('/getVehicles', VehicleController.getVehicles);
     router.put('/updateVehicle/:id', VehicleController.updateVehicle);
-    router.delete('/deleteVehicle/:id', VehicleController.deleteVehicle);
+    router.post('/addVehcleToQueue/:id', VehicleController.addVehicleToQueue);
     return router;
 }
