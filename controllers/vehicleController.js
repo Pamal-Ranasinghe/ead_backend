@@ -67,23 +67,33 @@ const addVehicleToQueue = async (req,res) => {
     try{
         if(req.params && req.body) {
             const vehicle = await Vehicle.findById(req.params.id);
-            if(vehicle) {
+            const fuelStation = await FuelStation.findById(req.body.fuelStationId);
+            const amountOfFuel = req.body.amountOfFuel;
+            if(vehicle && fuelStation) {
                 if(vehicle.fuelType === 'Petrol') {
-                    await FuelStation.findOneAndUpdate({stationName: req.body.stationName}, {$push: {petrolQueue: vehicle._id}})
-                    .then(data => {
-                        res.status(200).json({message: 'Vehicle added to queue successfully', data: data});
-                    })
-                    .catch(error => {
-                        res.status(500).json({message: 'Error occured', error: error});
-                    });
+                    if(fuelStation.patrolAmount > 0) {
+                        await fuelStation.updateOne({"$set": {"patrolAmount": fuelStation.patrolAmount - amountOfFuel}, $push: {petrolQueue: vehicle._id}})
+                        .then(data => {
+                            res.status(200).json({message: 'Vehicle added to queue successfully', data: data});
+                        })
+                        .catch(error => {
+                            res.status(500).json({message: 'Error occured', error: error});
+                        });
+                    } else {
+                        res.status(200).json({message: 'Petrol is not available'});
+                    }
                 } else if(vehicle.fuelType === 'Diesel') {
-                    await FuelStation.findOneAndUpdate({stationName: req.body.stationName}, {$push: {petrolQueue: vehicle._id}})
-                    .then(data => {
-                        res.status(200).json({message: 'Vehicle added to queue successfully', data: data});
-                    })
-                    .catch(error => {
-                        res.status(500).json({message: 'Error occured', error: error});
-                    });
+                    if(fuelStation.dieselAmount > 0) {
+                        await fuelStation.updateOne({"$set": {"dieselAmount": fuelStation.dieselAmount - amountOfFuel}, $push: {dieselQueue: vehicle._id}})
+                        .then(data => {
+                            res.status(200).json({message: 'Vehicle added to queue successfully', data: data});
+                        })
+                        .catch(error => {
+                            res.status(500).json({message: 'Error occured', error: error});
+                        });
+                    } else {
+                        res.status(200).json({message: 'Diesel is not available'});
+                    }
                 }
             }
         }
@@ -92,4 +102,5 @@ const addVehicleToQueue = async (req,res) => {
     }
 }
 
-module.exports = {addVehicle, getVehicles, updateVehicle, deleteVehicle, addVehicleToQueue};
+
+module.exports = {addVehicle, getVehicles, updateVehicle, deleteVehicle, addVehicleToQueue, completeTheFillingAndGo};
