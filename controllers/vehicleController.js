@@ -95,6 +95,8 @@ const addVehicleToQueue = async (req,res) => {
                         res.status(200).json({message: 'Diesel is not available'});
                     }
                 }
+            } else {
+                res.status(500).json({message: 'Vehicle or fuel station not found'});
             }
         }
     } catch (error) {
@@ -103,4 +105,4 @@ const addVehicleToQueue = async (req,res) => {
 }
 
 
-module.exports = {addVehicle, getVehicles, updateVehicle, deleteVehicle, addVehicleToQueue, completeTheFillingAndGo};
+module.exports = {addVehicle, getVehicles, updateVehicle, deleteVehicle, addVehicleToQueue};
