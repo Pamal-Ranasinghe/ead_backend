@@ -118,6 +118,7 @@ const addVehicleToQueue = async (req,res) => {
                         if(fuelStation.patrolAmount > 0) {
                             
                             vehicle.queued = true;
+                            vehicle.fuelAmount = amountOfFuel;
                             await vehicle.save();
     
                             await fuelStation.updateOne({"$set": {"patrolAmount": fuelStation.patrolAmount - amountOfFuel}, $push: {petrolQueue: vehicle._id}})
@@ -135,6 +136,7 @@ const addVehicleToQueue = async (req,res) => {
                         if(fuelStation.dieselAmount > 0) {
                             
                             vehicle.queued = true;
+                            vehicle.fuelAmount = amountOfFuel;
                             await vehicle.save();
     
                             // await vehicle.update({"queued": true});
@@ -148,7 +150,9 @@ const addVehicleToQueue = async (req,res) => {
                         } else {
                             res.status(200).json({message: 'Diesel is not available'});
                         }
-                    } 
+                    } else {
+                        res.status(500).json({message: 'Fuel type not found'});
+                    }
                 } else {
                     res.status(500).json({message: 'Vehicle or fuel station not found'});
                 }
@@ -162,7 +166,86 @@ const addVehicleToQueue = async (req,res) => {
     }
 } 
 
+const removeVehicleFromQueueWithFuel = async (req,res) => {
+    try{
+        const vehicleId = req.body.vehicleId;
+        const fuelStationId = req.body.fuelStationId;
+
+        const fuelStation = await FuelStation.findById(fuelStationId);
+        const vehicle = await Vehicle.findById(vehicleId);
+
+        if(vehicle.fuelType === 'Patrol') {
+            resetFuelAndQueue(vehicleId);
+            await fuelStation.updateOne({"$pull": {"petrolQueue": vehicleId}})
+            .then((data) => {
+                res.status(200).json({message: 'Vehicle removed from queue successfully', data: data});
+            })
+            .catch((error) => {
+                res.status(500).json({message: 'Error occured', error: error});
+            });
+
+        } else if(vehicle.fuelType === 'Diesel') {
+            resetFuelAndQueue(vehicleId);
+            await fuelStation.updateOne({"$pull": {"dieselQueue": vehicleId}})
+            .then((data) => {
+                res.status(200).json({message: 'Vehicle removed from queue successfully', data: data});
+            })
+            .catch((error) => {
+                res.status(500).json({message: 'Error occured', error: error});
+            });
+        } else {
+            res.status(500).json({message: 'Fuel type not found'});
+        }
+    } catch (error) {
+        res.status(500).json({message: 'Error occured', error: error});
+    }
+}
+
+const removeVehicleFromQueueWithoutFuel = async (req,res) => {
+    try{
+        const vehicleId = req.body.vehicleId;
+        const fuelStationId = req.body.fuelStationId;
+
+        const fuelStation = await FuelStation.findById(fuelStationId);
+        const vehicle = await Vehicle.findById(vehicleId);
+
+        if(vehicle.fuelType === 'Patrol') {
+            await fuelStation.updateOne({"$pull": {"petrolQueue": vehicleId}, "$set": {"patrolAmount": fuelStation.patrolAmount + vehicle.fuelAmount}})
+            .then((data) => {
+                resetFuelAndQueue(vehicleId);
+                res.status(200).json({message: 'Vehicle removed from queue successfully', data: data});
+            })
+            .catch((error) => {
+                res.status(500).json({message: 'Error occured', error: error});
+            });
+
+        } else if(vehicle.fuelType === 'Diesel') {
+            await fuelStation.updateOne({"$pull": {"dieselQueue": vehicleId}, "$set": {"dieselAmount": fuelStation.dieselAmount + vehicle.fuelAmount}})
+            .then((data) => {
+                resetFuelAndQueue(vehicleId);
+                res.status(200).json({message: 'Vehicle removed from queue successfully', data: data});
+            })
+            .catch((error) => {
+                res.status(500).json({message: 'Error occured', error: error});
+            });
+        } else {
+            res.status(500).json({message: 'Fuel type not found'});
+        }
 
 
+    } catch (error) {
+        res.status(500).json({message: 'Error occured', error: error});
+    }
+}
 
-module.exports = {addVehicle, getVehicles, updateVehicle, deleteVehicle, addVehicleToQueue};
+const resetFuelAndQueue = async (id) => {
+    try{
+        const vehicle = await Vehicle.findById(id);
+        await vehicle.updateOne({"$set": {"queued": false, "fuelAmount": 0}});
+    } catch (error) {
+        res.status(500).json({message: 'Error occured', error: error});
+    }
+}
+
+
+module.exports = {addVehicle, getVehicles, updateVehicle, deleteVehicle, addVehicleToQueue, removeVehicleFromQueueWithFuel, removeVehicleFromQueueWithoutFuel};
