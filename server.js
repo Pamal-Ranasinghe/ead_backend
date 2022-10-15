@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const fuelStationApi = require('./api/fuelStationApi');
+const vehicleApi = require('./api/vehicleApi');
 
 dotenv.config();
 const app = express();
@@ -32,6 +33,7 @@ app.route('/').get((req,res) => {
 });
 
 app.use('/fuelStation', fuelStationApi());
+app.use('/vehicle', vehicleApi());
 
 app.listen(PORT, (error) => {
     if (error) {
