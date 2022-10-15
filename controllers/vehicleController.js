@@ -133,6 +133,10 @@ const addVehicleToQueue = async (req,res) => {
                     } else if (vehicle.fuelType === 'Diesel') {
                         console.log("Diesel");
                         if(fuelStation.dieselAmount > 0) {
+                            
+                            vehicle.queued = true;
+                            await vehicle.save();
+    
                             // await vehicle.update({"queued": true});
                             await fuelStation.updateOne({"$set": {"dieselAmount": fuelStation.dieselAmount - amountOfFuel}, $push: {dieselQueue: vehicle._id}})
                             .then(data => {
