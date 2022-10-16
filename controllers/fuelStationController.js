@@ -62,4 +62,27 @@ const deleteFuelStation = async (req,res) => {
     }   
 }
 
-module.exports = {addFuelStation, getFuelStations, updateFuelStation, deleteFuelStation}
+const getFuelStationById = async (req,res) => {
+    try{
+        const fuelstation = await FuelStation.findById(req.params.id);
+
+
+        const data = {
+            "id": fuelstation._id,
+            "stationId" : fuelstation.stationId,
+            "stationName" : fuelstation.stationName,
+            "location" : fuelstation.location,
+            "patrolAmount" : fuelstation.patrolAmount,
+            "dieselAmount" : fuelstation.dieselAmount,
+            "patrolQueueCount" : fuelstation.petrolQueue.length,
+            "dieselQueueCount" : fuelstation.dieselQueue.length
+        };
+        
+        res.status(200).json({message: 'Fuel Station fetched successfully', data: data});
+    } catch (error) {
+        res.status(500).json({message: 'Error occured', error: error});
+    }
+}
+
+
+module.exports = {addFuelStation, getFuelStations, updateFuelStation, deleteFuelStation, getFuelStationById}
