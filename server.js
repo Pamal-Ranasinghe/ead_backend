@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 const PORT = process.env.PORT || 4000;
-const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_URI = "mongodb+srv://pamal:pamal@ead.5sutrt3.mongodb.net/?retryWrites=true&w=majority";
 
 mongoose.connect(MONGODB_URI, {
     useNewUrlParser: true,

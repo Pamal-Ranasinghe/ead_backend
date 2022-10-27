@@ -8,5 +8,8 @@ module.exports = () => {
     router.put('/updateFuelStation/:id', FuelStationController.updateFuelStation);
     router.delete('/deleteFuelStation/:id', FuelStationController.deleteFuelStation);
     router.get('/getFuelStationById/:id', FuelStationController.getFuelStationById);
+
+    router.post('/updateFuelStatus', FuelStationController.updateFuelStatus);
+
     return router;
 }

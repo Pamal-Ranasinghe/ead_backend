@@ -83,6 +83,23 @@ const getFuelStationById = async (req,res) => {
         res.status(500).json({message: 'Error occured', error: error});
     }
 }
+const updateFuelStatus = async (req,res) => {
+    try{
+        // const fuelstation = await FuelStation.findById(req.params.id);
 
 
-module.exports = {addFuelStation, getFuelStations, updateFuelStation, deleteFuelStation, getFuelStationById}
+        const data = {
+            "name": "morpheus",
+            "job": "leader",
+            "id": "996",
+            "createdAt": "2022-10-27T09:51:58.138Z"
+        };
+        
+        res.status(200).json({message: 'Fuel Station fetched successfully', data: data});
+    } catch (error) {
+        res.status(500).json({message: 'Error occured', error: error});
+    }
+}
+
+
+module.exports = {addFuelStation, getFuelStations, updateFuelStation, deleteFuelStation, getFuelStationById,updateFuelStatus}
