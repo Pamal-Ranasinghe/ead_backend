@@ -1,4 +1,4 @@
-const FuelStation = require('../models/fuelStation');
+const FuelStation = require('../models/FuelStation');
 
 const addFuelStation = async (req,res) => {
     try {
@@ -64,7 +64,7 @@ const deleteFuelStation = async (req,res) => {
 
 const getFuelStationById = async (req,res) => {
     try{
-        const fuelstation = await FuelStation.findById(req.params.id);
+        const fuelstation = await FuelStation.findOne({email:req.params.id});
 
 
         const data = {
@@ -95,7 +95,7 @@ const updateFuelStatus = async (req,res) => {
             "createdAt": "2022-10-27T09:51:58.138Z"
         };
         
-        res.status(200).json({message: 'Fuel Station fetched successfully', data: data});
+        res.status(200).json({message: 'Fuel Station fetched successfully', data});
     } catch (error) {
         res.status(500).json({message: 'Error occured', error: error});
     }

@@ -1,5 +1,5 @@
 const Vehicle = require('../models/vehicle');
-const FuelStation = require('../models/fuelStation');
+const FuelStation = require('../models/FuelStation');
 
 const addVehicle = async (req,res) => {
     try{
