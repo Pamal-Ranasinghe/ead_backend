@@ -9,6 +9,7 @@ module.exports = () => {
     router.delete('/deleteFuelStation/:id', FuelStationController.deleteFuelStation);
     router.get('/getFuelStationById/:id', FuelStationController.getFuelStationById);
 
+    router.post('/updateFuelAmount', FuelStationController.updateFuelAmount);
     router.post('/updateFuelStatus', FuelStationController.updateFuelStatus);
 
     

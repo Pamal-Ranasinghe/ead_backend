@@ -9,6 +9,7 @@ const FuelStationSchema = new mongoose.Schema({
     dieselAmount : {type: Number, required: false},
     petrolQueue : [{type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Vehicle'}],
     dieselQueue : [{type: mongoose.Schema.Types.ObjectId, required: false, ref: 'Vehicle'}],
+    date:{type: String, required: false}
 });
 
 const FuelStation = mongoose.model('FuelStationProfile', FuelStationSchema);

@@ -78,28 +78,61 @@ const getFuelStationById = async (req,res) => {
             "dieselQueueCount" : fuelstation.dieselQueue.length
         };
         
-        res.status(200).json({message: 'Fuel Station fetched successfully', data: data});
+        res.status(200).json({message: 'Fuel Station fetched successfully', data: [data]});
     } catch (error) {
         res.status(500).json({message: 'Error occured', error: error});
     }
 }
-const updateFuelStatus = async (req,res) => {
+const updateFuelAmount = async (req,res) => {
     try{
         // const fuelstation = await FuelStation.findById(req.params.id);
+ 
+        const {fuelType,amount,date,email} = req.body;
 
+        const filter = { email: email };
+        let update;
 
-        const data = {
+        if(fuelType == 'Petrol'){
+            update = { patrolAmount: amount };
+        }else{
+            update = { dieselAmount: amount,date:date };
+        }
+        
+        let result = await FuelStation.findOneAndUpdate(filter, update);
+        console.log(result)
+        res.status(200).send({
             "name": "morpheus",
             "job": "leader",
             "id": "996",
             "createdAt": "2022-10-27T09:51:58.138Z"
-        };
+        });
+    } catch (error) {
+        res.status(500).json({message: 'Error occured', error: error});
+    }
+}
+
+const updateFuelStatus = async (req,res) => {
+    try{
+        // const fuelstation = await FuelStation.findById(req.params.id);
+ 
+        const {fuelType,email} = req.body;
+
+        const filter = { email: email };
+        let update;
+
+        if(fuelType == 'Petrol'){
+            update = { patrolAmount: 0};
+        }else{
+            update = { dieselAmount: 0};
+        }
         
-        res.status(200).json({message: 'Fuel Station fetched successfully', data});
+        let result = await FuelStation.findOneAndUpdate(filter, update);
+        console.log(result)
+        res.status(200).send(result);
     } catch (error) {
         res.status(500).json({message: 'Error occured', error: error});
     }
 }
 
 
-module.exports = {addFuelStation, getFuelStations, updateFuelStation, deleteFuelStation, getFuelStationById,updateFuelStatus}
+module.exports = {addFuelStation, getFuelStations, updateFuelStation, deleteFuelStation, getFuelStationById,updateFuelAmount,updateFuelStatus}
