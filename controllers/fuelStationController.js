@@ -1,20 +1,6 @@
 const FuelStation = require('../models/FuelStation');
 
-const addFuelStation = async (req,res) => {
-    try {
-        const fuelStation = new FuelStation(req.body);
-        await fuelStation.save()
-        .then(data => {
-            res.status(200).json({message: 'Fuel Station added successfully', data: data});
 
-        })
-        .catch(error => {
-            res.status(500).json({message: 'Error occured', error: error});
-        });
-    } catch (error) {
-        res.status(500).json({message: 'Error occured', error: error});
-    }
-}
 
 const getFuelStations = async (req,res) => {
     try{
@@ -61,6 +47,9 @@ const deleteFuelStation = async (req,res) => {
         res.status(500).json({message: 'Error occured', error: error});
     }   
 }
+
+
+//Used controller functions
 
 const getFuelStationById = async (req,res) => {
     try{
@@ -135,4 +124,4 @@ const updateFuelStatus = async (req,res) => {
 }
 
 
-module.exports = {addFuelStation, getFuelStations, updateFuelStation, deleteFuelStation, getFuelStationById,updateFuelAmount,updateFuelStatus}
+module.exports = { getFuelStations, updateFuelStation, deleteFuelStation, getFuelStationById,updateFuelAmount,updateFuelStatus}
