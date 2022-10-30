@@ -124,4 +124,42 @@ const updateFuelStatus = async (req,res) => {
 }
 
 
-module.exports = { getFuelStations, updateFuelStation, deleteFuelStation, getFuelStationById,updateFuelAmount,updateFuelStatus}
+const checkEmail = async (req,res) => {
+    try{
+        const fuelstation = await FuelStation.findOne({email:req.body.email});
+
+        console.log("Check Email Triggerd")
+        const data = {
+            "id": fuelstation._id,
+            "stationId" : fuelstation.stationId,
+            "stationName" : fuelstation.stationName,
+            "location" : fuelstation.location,
+            "patrolAmount" : fuelstation.patrolAmount,
+            "dieselAmount" : fuelstation.dieselAmount,
+            "patrolQueueCount" : fuelstation.petrolQueue.length,
+            "dieselQueueCount" : fuelstation.dieselQueue.length
+        };
+        
+        res.status(200).json({message: 'Fuel Station fetched successfully', data: data});
+    } catch (error) {
+        res.status(500).json({message: 'Error occured', error: error});
+    }
+    
+}
+const GetStationQueueDetails = async (req,res) => {
+    try{
+        const fuelstation = await FuelStation.findOne({email:req.body.email}).populate('petrolQueue');
+
+        console.log(fuelstation.petrolQueue)
+        const data = {
+        };
+        
+        res.status(200).json({message: 'Fuel Station fetched successfully', data: fuelstation.petrolQueue});
+    } catch (error) {
+        res.status(500).json({message: 'Error occured', error: error});
+    }
+    
+}
+
+
+module.exports = {GetStationQueueDetails,checkEmail, getFuelStations, updateFuelStation, deleteFuelStation, getFuelStationById,updateFuelAmount,updateFuelStatus}

@@ -11,6 +11,8 @@ module.exports = () => {
 
     router.post('/updateFuelAmount', FuelStationController.updateFuelAmount);
     router.post('/updateFuelStatus', FuelStationController.updateFuelStatus);
+    router.post('/checkEmail', FuelStationController.checkEmail);
+    router.post('/getStationQueueDetails', FuelStationController.GetStationQueueDetails);
 
     
 
