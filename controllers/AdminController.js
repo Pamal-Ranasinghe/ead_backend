@@ -30,7 +30,7 @@ const addFuelStation = async (req,res) => {
 
 const getFuelStations = async (req,res) => {
     try{
-        await FuelStation.find()
+        await FuelStation.find().sort({createdAt:'DESC'})
         .then(data => {
             res.status(200).json({message: 'Fuel Stations fetched successfully', data: data});
         })
