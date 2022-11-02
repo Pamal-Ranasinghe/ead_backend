@@ -5,5 +5,6 @@ const FuelStationController = require('../controllers/AdminController');
 module.exports = () => {
     router.post('/addFuelStation', FuelStationController.addFuelStation);
     router.get('/getFuelStations', FuelStationController.getFuelStations);
+    router.post('/deleteFuelStation', FuelStationController.deleteFuelStation);
     return router;
 }

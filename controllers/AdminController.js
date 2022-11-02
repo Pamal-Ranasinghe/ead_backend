@@ -43,4 +43,22 @@ const getFuelStations = async (req,res) => {
 }
 
 
-module.exports = {addFuelStation,getFuelStations}
+const deleteFuelStation = async (req,res) => {
+    try{
+        const {email} = req.body;
+        console.log(email.split('"')[1])
+        FuelStation.deleteOne({ email: email.split('"')[1] })
+        .then(data => {
+            console.log(data)
+            res.status(200).json({message: 'Fuel Stations deleted successfully', data: data});
+        })
+        .catch(error => {
+            res.status(500).json({message: 'Error occured', error: error});
+        });
+    } catch(error) {
+        res.status(500).json({message: 'Error occured', error: error});
+    }
+}
+
+
+module.exports = {addFuelStation,getFuelStations,deleteFuelStation}
